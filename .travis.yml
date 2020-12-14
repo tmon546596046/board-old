@@ -18,6 +18,8 @@ stages:
   - report
 install:
   - echo "install"
+before_script:
+  - sudo /etc/init.d/mysql stop
 jobs:
   - stage: ui-test
     script:
