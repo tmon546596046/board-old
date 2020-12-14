@@ -19,6 +19,7 @@ stages:
 install:
   - echo "install"
 jobs:
+  fast_finish: true
   - stage: ui-test
     script:
       - echo "uitest script"
@@ -33,6 +34,7 @@ jobs:
       - docker tag piranhahu/dev_gomail:dev 10.111.25.119/board/dev_gomail:dev
       - docker pull piranhahu/python:tavern2
       - docker tag piranhahu/python:tavern2 python:tavern2
+      - mkdir -p /etc/board/cert
       - openssl genrsa -out /etc/board/cert/ca-key.pem 2048
       - openssl req -new -x509 -key /etc/board/cert/ca-key.pem -out /etc/board/cert/ca.pem -days 1095
       - docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
