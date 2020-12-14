@@ -25,7 +25,7 @@ jobs:
       - docker pull piranhahu/dev_uibuilder:7.4
       - docker tag piranhahu/dev_uibuilder:7.4 10.111.25.119/board/dev_uibuilder:7.4
       - docker-compose -f tests/docker-compose.uibuilder.test.yml up
-      - bash -c "function uitest(){code=$(docker inspect tests_uibuilder7.4_1 -f "{{.State.ExitCode}}"); return $code}; uitest"
+      - bash -c 'function uitest(){ code=$(docker inspect gitlab -f "{{.State.ExitCode}}"); return $code; }; uitest'
       - source /etc/profile
       - docker pull registry:2.6.2        
       - docker tag registry:2.6.2 registry:latest
