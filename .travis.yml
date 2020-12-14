@@ -19,7 +19,6 @@ stages:
 install:
   - echo "install"
 jobs:
-  fast_finish: true
   - stage: ui-test
     script:
       - echo "uitest script"
@@ -42,7 +41,7 @@ jobs:
       - cp tests/docker-compose.test.yml make/dev
       - cp tests/ldap_test.ldif make/dev
       - docker-compose -f make/dev/docker-compose.test.yml up -d
-      - sh tests/hosts.gitlab.sh
+      - sudo sh tests/hosts.gitlab.sh
       - docker run --rm -v $CI_PROJECT_DIR:/data/workspace/board/src/git/inspursoft/board -v /tmp:/tmp -w /data/workspace/board/src/git/inspursoft/board/tests --network host  -e GOPATH=/data/workspace/board golang:$golang_version bash -c "source env.cfg && source run.sh"
       - docker run --rm -v $CI_PROJECT_DIR/src:/go/src/git/inspursoft/board/src -v $CI_PROJECT_DIR/VERSION:/go/bin/VERSION -w /go/src/git/inspursoft/board/src/adminserver -e GO111MODULE=off golang:$golang_version go build -v -o /go/bin/adminserver
   - stage: api-test
