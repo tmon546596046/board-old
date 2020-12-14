@@ -10,7 +10,7 @@ env:
   last_version: "latest"
   mysql_version: "5.7.31"
   openldap_version: "1.1.11"
-  registry_ip: "10.110.27.103:6000"
+  registry_ip: "dicker.io"
 stages:
   - pre-merge-requests
   - ui-test
@@ -22,27 +22,17 @@ jobs:
   - stage: ui-test
     script:
       - echo "uitest script"
-      - docker pull $registry_ip/board/dev_uibuilder:7.4
-      - docker tag $registry_ip/board/dev_uibuilder:7.4 10.111.25.119/board/dev_uibuilder:7.4
+      - docker pull piranhahu/dev_uibuilder:7.4
+      - docker tag piranhahu/dev_uibuilder:7.4 10.111.25.119/board/dev_uibuilder:7.4
       - docker-compose -f tests/docker-compose.uibuilder.test.yml up
       - code=$(docker inspect tests_uibuilder7.4_1 -f "{{.State.ExitCode}}"), exit $code
       - source /etc/profile
-      - docker pull $registry_ip/library/golang:$golang_version
-      - docker tag $registry_ip/library/golang:$golang_version golang:$golang_version
-      - docker pull $registry_ip/library/registry:2.6.2        
-      - docker tag $registry_ip/library/registry:2.6.2 registry:latest
-      - docker pull $registry_ip/library/mysql:$mysql_version
-      - docker tag $registry_ip/library/mysql:$mysql_version mysql:$mysql_version
-      - docker pull $registry_ip/library/openldap:$openldap_version
-      - docker tag $registry_ip/library/openldap:$openldap_version osixia/openldap:$openldap_version
-      - docker pull $registry_ip/board/board-gogits:$last_version
-      - docker tag $registry_ip/board/board-gogits:$last_version board-gogits:$last_version
-      - docker pull $registry_ip/board/dev_jenkins:dev
-      - docker tag $registry_ip/board/dev_jenkins:dev dev_jenkins:dev
-      - docker pull $registry_ip/board/dev_gomail:dev
-      - docker tag $registry_ip/board/dev_gomail:dev 10.111.25.119/board/dev_gomail:dev
-      - docker pull $registry_ip/library/python:tavern2
-      - docker tag $registry_ip/library/python:tavern2 python:tavern2
+      - docker pull registry:2.6.2        
+      - docker tag registry:2.6.2 registry:latest
+      - docker pull piranhahu/dev_gomail:dev  
+      - docker tag piranhahu/dev_gomail:dev 10.111.25.119/board/dev_gomail:dev
+      - docker pull piranhahu/python:tavern2
+      - docker tag piranhahu/python:tavern2 python:tavern2
       - docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
       - cp tests/docker-compose.test.yml make/dev
