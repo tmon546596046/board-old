@@ -24,8 +24,8 @@ install:
   - kind create cluster
   - kind get clusters
   - sudo mkdir -p /etc/board/cert
-  - docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
-  - docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
+  - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
+  - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
 before_script:
   - sudo /etc/init.d/mysql stop
 jobs:
