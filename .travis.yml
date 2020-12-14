@@ -23,12 +23,9 @@ install:
   - sudo mv ./kind /usr/local/bin/kind
   - kind create cluster
   - kind get clusters
-  - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
-  - chmod +x ./kubectl
-  - sudo mv ./kubectl /usr/local/bin/kubectl
-  - kubectl version --client
-  - kubectl get nodes
-  - kubectl config view
+  - sudo mkdir -p /etc/board/cert
+  - docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
+  - docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
 before_script:
   - sudo /etc/init.d/mysql stop
 jobs:
@@ -46,10 +43,10 @@ jobs:
       - docker tag piranhahu/dev_gomail:dev 10.111.25.119/board/dev_gomail:dev
       - docker pull piranhahu/python:tavern2
       - docker tag piranhahu/python:tavern2 python:tavern2
-      - sudo mkdir -p /etc/board/cert
-      - sudo openssl req -x509 -newkey rsa:4096 -keyout /etc/board/cert/ca-key.pem -out /etc/board/cert/ca.pem -days 365 -nodes -subj '/CN=localhost'
       - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
+      - export KUBE_MASTER_PORT=$(kind get kubeconfig |grep server | awk -F ':' '{print $4}')
+      - export KUBE_MASTER_IP=127.0.0.1
       - cp tests/docker-compose.test.yml make/dev
       - cp tests/ldap_test.ldif make/dev
       - docker pull piranhahu/dev_tokenserver:dev
