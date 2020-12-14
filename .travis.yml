@@ -34,8 +34,7 @@ jobs:
       - docker pull piranhahu/python:tavern2
       - docker tag piranhahu/python:tavern2 python:tavern2
       - sudo mkdir -p /etc/board/cert
-      - sudo openssl genrsa -out /etc/board/cert/ca-key.pem 2048
-      - sudo openssl req -new -x509 -key /etc/board/cert/ca-key.pem -out /etc/board/cert/ca.pem -days 1095
+      - sudo openssl req -x509 -newkey rsa:4096 -keyout /etc/board/cert/ca-key.pem -out /etc/board/cert/ca.pem -days 365 -nodes -subj '/CN=localhost'
       - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
       - cp tests/docker-compose.test.yml make/dev
