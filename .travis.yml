@@ -26,12 +26,15 @@ install:
   - sudo mkdir -p /etc/board/cert
   - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
   - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
+  - export KUBE_MASTER_PORT=$(kind get kubeconfig |grep server | awk -F ':' '{print $4}')
+  - export KUBE_MASTER_IP=127.0.0.1
 before_script:
   - sudo /etc/init.d/mysql stop
 jobs:
   - stage: ui-test
     script:
       - echo "uitest script"
+      - sed -i -e 's/KUBE_MASTER_IP=10.110.27.103/KUBE_MASTER_IP=127.0.0.1/g' -e "s/KUBE_MASTER_PORT=51926/KUBE_MASTER_PORT=${KUBE_MASTER_PORT}/g" -e "s/NODE_IP=10.110.27.103/NODE_IP=kind-control-plane/g" tests/env.cfg
       - docker pull piranhahu/dev_uibuilder:7.4
       - docker tag piranhahu/dev_uibuilder:7.4 10.111.25.119/board/dev_uibuilder:7.4
       - docker-compose -f tests/docker-compose.uibuilder.test.yml up
@@ -45,8 +48,6 @@ jobs:
       - docker tag piranhahu/python:tavern2 python:tavern2
       - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
-      - export KUBE_MASTER_PORT=$(kind get kubeconfig |grep server | awk -F ':' '{print $4}')
-      - export KUBE_MASTER_IP=127.0.0.1
       - cp tests/docker-compose.test.yml make/dev
       - cp tests/ldap_test.ldif make/dev
       - docker pull piranhahu/dev_tokenserver:dev
