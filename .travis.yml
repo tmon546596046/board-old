@@ -33,6 +33,7 @@ jobs:
       - kind create cluster --config tests/kind-config.yaml
       - kind get clusters
       - kubectl create -f tests/board-apiserver-clusterrolebinding.yaml
+      - kubectl create ns library
       - sudo mkdir -p /etc/board/cert
       - sudo mkdir -p /data/board/cert
       - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
