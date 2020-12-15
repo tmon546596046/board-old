@@ -54,7 +54,7 @@ func prepareForProjectMember() {
 
 func TestAddOrUpdateProjectMember(t *testing.T) {
 	prepareForProjectMember()
-	project, err := service.GetProjectByName(testMemberProjectName)
+	_, err := service.GetProjectByName(testMemberProjectName)
 	if err != nil {
 		logs.Error("Failed to get project.")
 	}
