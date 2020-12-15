@@ -21,6 +21,9 @@ install:
   - curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.9.0/kind-linux-amd64
   - chmod +x ./kind
   - sudo mv ./kind /usr/local/bin/kind
+  - curl -LO "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
+  - chmod +x ./kubectl
+  - sudo mv ./kubectl /usr/local/bin/kubectl
 before_script:
   - sudo /etc/init.d/mysql stop
 jobs:
@@ -29,6 +32,7 @@ jobs:
       - echo "uitest script"
       - kind create cluster --config tests/kind-config.yaml
       - kind get clusters
+      - kubectl create -f tests/board-apiserver-clusterrolebinding.yaml
       - sudo mkdir -p /etc/board/cert
       - sudo mkdir -p /data/board/cert
       - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
