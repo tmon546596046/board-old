@@ -27,7 +27,7 @@ jobs:
   - stage: ui-test
     script:
       - echo "uitest script"
-      - kind create cluster --config test/kind-config.yaml
+      - kind create cluster --config tests/kind-config.yaml
       - kind get clusters
       - sudo mkdir -p /etc/board/cert
       - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
