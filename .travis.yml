@@ -35,7 +35,7 @@ jobs:
       - export KUBE_MASTER_PORT=6443
       - export KUBE_MASTER_IP=$(ip address show dev eth0 | grep "inet " | awk '{print $2}' | awk -F '/' '{print $1}')
       - echo $KUBE_MASTER_IP
-      - sed -i -e 's/KUBE_MASTER_IP=10.110.27.103/KUBE_MASTER_IP=127.0.0.1/g' -e "s/KUBE_MASTER_PORT=51926/KUBE_MASTER_PORT=${KUBE_MASTER_PORT}/g" -e "s/NODE_IP=10.110.27.103/NODE_IP=kind-control-plane/g" tests/env.cfg
+      - sed -i -e 's/KUBE_MASTER_IP=10.110.27.103/KUBE_MASTER_IP=${KUBE_MASTER_IP}/g' -e "s/KUBE_MASTER_PORT=51926/KUBE_MASTER_PORT=${KUBE_MASTER_PORT}/g" -e "s/NODE_IP=10.110.27.103/NODE_IP=kind-control-plane/g" tests/env.cfg
       - docker pull piranhahu/dev_uibuilder:7.4
       - docker tag piranhahu/dev_uibuilder:7.4 10.111.25.119/board/dev_uibuilder:7.4
       - docker-compose -f tests/docker-compose.uibuilder.test.yml up
@@ -47,6 +47,7 @@ jobs:
       - docker tag piranhahu/dev_gomail:dev 10.111.25.119/board/dev_gomail:dev
       - docker pull piranhahu/python:tavern2
       - docker tag piranhahu/python:tavern2 python:tavern2
+      - sed -i -e '/kube_http_scheme/c\kube_http_scheme=https' -e "/kube_master_ip/c\kube_master_ip=${KUBE_MASTER_IP}" -e "/kube_master_port/c\kube_master_port=${KUBE_MASTER_PORT}" make/board.cfg 
       - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
       - cp tests/docker-compose.test.yml make/dev
