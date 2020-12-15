@@ -13,5 +13,5 @@ echo "$KUBE_MASTER_PORT"
 
 echo "cp make/config/apiserver/kubeconfig /tmp/"
 pwd
-cp make/config/apiserver/kubeconfig /tmp
-cat /tmp/kubeconfig
+cp make/config/apiserver/kubeconfig /tmp/config
+cat /tmp/config
