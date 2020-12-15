@@ -30,6 +30,7 @@ jobs:
       - kind create cluster --config tests/kind-config.yaml
       - kind get clusters
       - sudo mkdir -p /etc/board/cert
+      - sudo mkdir -p /data/board/cert
       - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
       - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
       - export KUBE_MASTER_PORT=6443
@@ -48,7 +49,7 @@ jobs:
       - docker pull piranhahu/python:tavern2
       - docker tag piranhahu/python:tavern2 python:tavern2
       - sed -i -e '/kube_http_scheme/c\kube_http_scheme=https' -e "/kube_master_ip/c\kube_master_ip=${KUBE_MASTER_IP}" -e "/kube_master_port/c\kube_master_port=${KUBE_MASTER_PORT}" make/board.cfg 
-      - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert python:tavern2 /data/make/prepare
+      - sudo docker run --rm -v `pwd`:/data -v /etc/board/cert:/etc/board/cert -v -v /data/board/cert:/data/board/cert python:tavern2 /data/make/prepare
       - source tests/env.cfg
       - cp tests/docker-compose.test.yml make/dev
       - cp tests/ldap_test.ldif make/dev
