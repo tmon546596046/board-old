@@ -27,7 +27,7 @@ install:
   - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.crt /etc/board/cert/ca.pem
   - sudo docker cp kind-control-plane:/etc/kubernetes/pki/ca.key /etc/board/cert/ca-key.pem
   - export KUBE_MASTER_PORT=$(kind get kubeconfig |grep server | awk -F ':' '{print $4}')
-  - export KUBE_MASTER_IP=$(ip address show dev eno1 | grep "inet " | awk '{print $2}' | awk -F '/' '{print $1}')
+  - export KUBE_MASTER_IP=$(ip address show dev eth0 | grep "inet " | awk '{print $2}' | awk -F '/' '{print $1}')
   - echo $KUBE_MASTER_IP
   - netstat -ln
 before_script:
