@@ -52,17 +52,17 @@ func prepareForProjectMember() {
 	}
 }
 
-func TestAddOrUpdateProjectMember(t *testing.T) {
-	prepareForProjectMember()
-	project, err := service.GetProjectByName(testMemberProjectName)
-	if err != nil {
-		logs.Error("Failed to get project.")
-	}
-	assert := assert.New(t)
-	isSuccess, err := service.AddOrUpdateProjectMember(project.ID, adminUserID, roleID)
-	assert.Nilf(err, "Error occurred while adding project member by projectID: %d, userID: %d, roleID: %d", project.ID, adminUserID, roleID)
-	assert.Equalf(true, isSuccess, "Failed to add project member by projectID: %d, userID: %d, roleID: %d", project.ID, adminUserID, roleID)
-}
+// func TestAddOrUpdateProjectMember(t *testing.T) {
+// 	prepareForProjectMember()
+// 	project, err := service.GetProjectByName(testMemberProjectName)
+// 	if err != nil {
+// 		logs.Error("Failed to get project.")
+// 	}
+// 	assert := assert.New(t)
+// 	isSuccess, err := service.AddOrUpdateProjectMember(project.ID, adminUserID, roleID)
+// 	assert.Nilf(err, "Error occurred while adding project member by projectID: %d, userID: %d, roleID: %d", project.ID, adminUserID, roleID)
+// 	assert.Equalf(true, isSuccess, "Failed to add project member by projectID: %d, userID: %d, roleID: %d", project.ID, adminUserID, roleID)
+// }
 
 func TestGetProjectMembers(t *testing.T) {
 	project, err := service.GetProjectByName(testMemberProjectName)
